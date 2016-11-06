@@ -1,0 +1,77 @@
+\documentclass[11pt, twoside, a4paper]{article}
+
+\usepackage{tikz}
+\usepackage{amssymb,amsmath}
+
+\newcommand{\Figure}[1]{Figure~\ref{#1}}
+\newcommand{\Eq}[1]{Eq.~\ref{#1}}
+\newcommand{\Nat}{\mathbb{N}}
+
+\begin{document}
+    \title{Euler 94: Almost equilateral triangles}
+    \date{}
+    \author{Didier Pieroux}
+    \maketitle
+    
+    \begin{abstract}
+        It is easily proved that no equilateral triangle exists with integral length sides and integral area. However, the almost equilateral triangle 5-5-6 has an area of 12 square units.
+    
+        We shall define an almost equilateral triangle to be a triangle for which two sides are equal and the third differs by no more than one unit.
+    
+        Find the sum of the perimeters of all almost equilateral triangles with integral side lengths and area and whose perimeters do not exceed one billion (1,000,000,000).
+    \end{abstract}
+    
+    \section{Formulation}
+    \subsection{Initial approach}
+    Let consider an isosceles triangle of base $b\in\Nat$, of equal sides $a\in\Nat$, and of height $h$ (\Figure{fig:triangle1}).
+      
+    \begin{figure}[h!]
+        \begin{center}
+            \begin{tikzpicture}[scale=0.5]
+            \draw (0, 0) 
+               -- (6, 0) node[midway, below] {b} 
+               -- (3, 4) 
+               -- (0, 0) node[midway, above left] {a} ;
+            \draw[dotted] (3, 0) -- (3, 4) node[pos=0.33, right] {h};
+            \end{tikzpicture}
+            \caption{Geometric description}
+            \label{fig:triangle1}
+        \end{center}
+    \end{figure}
+
+    The problem is then described by the following equations, with $P$ the perimeter and $S$ the area:
+    \begin{align}
+        a & = b \pm 1 \\ \label{eq:a1}
+        P & = 2a+b \\ 
+        S & = bh/2 \in \Nat\\
+        a^2 & = (b/2)^2 + h^2 \label{eq:pytha1}
+    \end{align} 
+        
+    $S$ natural implies that $bh$ must be even, which lead to two cases according to the parity of $b$. Let us first consider the case $b$ odd. For $S$ to be integral, $h$ must then be even; so is $h^2$. However $(b/2)^2$ is fractional and thus $a^2$ is thus also fractional. This is not acceptable as $a$ is integer. Thus the case $b$ odd leads to a contradiction.
+
+    This invite us to reformulate the problem with a base of even length $2b$
+
+    \subsection{Reformulation}
+    Let thus consider now an isosceles triangle of base $2b$, with $b\in\Nat$, of equal sides $a\in\Nat$, and of height $h$ (\Figure{fig:triangle2}).
+    
+    \begin{figure}[h!]
+        \begin{center}
+            \begin{tikzpicture}[scale=0.5]
+            \draw              (0, 0) -- (3, 0) node[midway, below] {b};
+            \draw [dashed] (3, 0) -- (6, 0) -- (3, 4);
+            \draw              (3, 4) -- (0, 0) node[midway, above left] {a} ;
+            \draw[dotted]      (3, 0) -- (3, 4) node[pos=0.33, right] {h};
+            \end{tikzpicture}
+            \caption{Updated geometric description}
+            \label{fig:triangle2}
+        \end{center}
+    \end{figure}
+    
+    The equations [\ref{eq:a1}-\ref{eq:pytha1}] read now:
+    \begin{eqnarray}
+    a & = & 2b \pm 1 \\
+    P & = & 2(a+b) \\ 
+    S & = & bh \in \Nat\\
+    a^2 & = & b^2 + h^2 
+    \end{eqnarray} 
+\end{document}

@@ -1,0 +1,5 @@
+I did it by hand:
+
+3/7 = 428571 / 999999
+
+999999 is the greatest dividor equal or below 1000000 which is a multiple of 7. Remove one from the numerator. => 428570.

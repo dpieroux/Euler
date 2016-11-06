@@ -1,0 +1,1 @@
+main = print $ sum $ filter (\n -> 0 == n `rem` 3 || 0 == n `rem` 5) [1 .. 999]
