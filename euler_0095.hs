@@ -21,7 +21,9 @@ exceeding one million.
 -}
 
 import Data.List
-import Data.Numbers.Primes
+import Data.Numbers.Primes (primes)
+import qualified Data.Set as Set
+import Data.Array.Unboxed
 
 type Base = Int
 type Exp = Int
@@ -67,6 +69,64 @@ combine' (factor:factors) acc = combine' factors (combine'' (expand factor) acc)
 combine'' :: [Int] -> [Int] -> [Int]
 combine'' factors values = concat $ map (\f -> map (f*) values) factors
      
+-- Trajectory
+data Trajectory = Trajectory [Int] -- Trajectory
+                             (Set.Set Int) -- nodes
+                             deriving (Show) 
+                             
+data Accum = Accum Int -- minVal
+                   Int -- length 
+                   (UArray Int Bool) -- visited
+                   deriving (Show) 
+                               
+data TrajectoryOutcome = Cycle [Int] -- precycle
+                               [Int] -- cycle
+                       | Failure [Int] -- visited
+                       deriving (Show) 
 
 
 
+dim = 1000000 :: Int
+--dim = 100 :: Int
+
+emptyTrajectory = Trajectory [] Set.empty
+emptyAccum :: Accum
+emptyAccum = 
+    Accum 0 -- minVal 
+          0 -- length
+          (array (1, dim) ((1, True) : [(i, False) | i <- [2..dim]])) -- visited
+
+step = sum . tail . divisors
+
+trajectory :: Int 
+           -> Accum 
+           -> TrajectoryOutcome
+trajectory n 
+           (Accum minVal len visited) 
+    = trajectory_ n emptyTrajectory 
+  where
+    trajectory_ :: Int -> Trajectory -> TrajectoryOutcome
+    trajectory_ n (Trajectory trajectory nodes)
+        | dim < n            = Failure trajectory
+        | visited ! n        = Failure trajectory
+        | Set.member n nodes = Cycle preCycle cycle
+        | otherwise          = trajectory_ (step n) 
+                                           (Trajectory (n:trajectory) 
+                                                       (Set.insert n nodes))
+      where
+        split :: [Int] -> [Int] -> ([Int], [Int])
+        split (node:nodes) acc
+          | n == node = (nodes, node:acc)
+          | otherwise = split nodes (node:acc)
+        (preCycle, cycle) = split trajectory []
+
+{-run :: Int -> Trajectory -> State -> (Maybe Int, State)
+run n trajectory state 
+    | failure
+    | otherwise = (Nothing, emptyAccum)
+  where
+    failure = n == 0
+-}
+
+
+-- trajectory 12496 emptyAccum
