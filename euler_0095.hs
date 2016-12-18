@@ -74,59 +74,66 @@ data Trajectory = Trajectory [Int] -- Trajectory
                              (Set.Set Int) -- nodes
                              deriving (Show) 
                              
-data Accum = Accum Int -- minVal
-                   Int -- length 
-                   (UArray Int Bool) -- visited
-                   deriving (Show) 
+data Accum = Accum { minVal_ :: Int
+                   , length_ :: Int 
+                   , cycle_ :: [Int]
+                   , nodeArray_  :: (UArray Int Bool) -- visited
+                   } deriving (Show) 
                                
-data TrajectoryOutcome = Cycle [Int] -- precycle
+data TrajectoryOutcome = Cycle [Int] -- nodes
                                [Int] -- cycle
-                       | Failure [Int] -- visited
+                       | Failure [Int] -- nodes
                        deriving (Show) 
 
 
 
-dim = 1000000 :: Int
---dim = 100 :: Int
-
 emptyTrajectory = Trajectory [] Set.empty
-emptyAccum :: Accum
-emptyAccum = 
+emptyAccum :: Int -> Accum
+emptyAccum dim = 
     Accum 0 -- minVal 
           0 -- length
+          [] -- cycles
           (array (1, dim) ((1, True) : [(i, False) | i <- [2..dim]])) -- visited
 
 step = sum . tail . divisors
 
-trajectory :: Int 
-           -> Accum 
-           -> TrajectoryOutcome
-trajectory n 
-           (Accum minVal len visited) 
+trajectory :: Int -> Int -> Accum -> TrajectoryOutcome
+trajectory n dim (Accum minVal len cycle nodeArray) 
     = trajectory_ n emptyTrajectory 
   where
     trajectory_ :: Int -> Trajectory -> TrajectoryOutcome
     trajectory_ n (Trajectory trajectory nodes)
         | dim < n            = Failure trajectory
-        | visited ! n        = Failure trajectory
-        | Set.member n nodes = Cycle preCycle cycle
+        | nodeArray ! n      = Failure trajectory
+        | Set.member n nodes = Cycle trajectory (cycle trajectory [])
         | otherwise          = trajectory_ (step n) 
                                            (Trajectory (n:trajectory) 
                                                        (Set.insert n nodes))
       where
-        split :: [Int] -> [Int] -> ([Int], [Int])
-        split (node:nodes) acc
-          | n == node = (nodes, node:acc)
-          | otherwise = split nodes (node:acc)
-        (preCycle, cycle) = split trajectory []
+        cycle :: [Int] -> [Int] -> [Int]
+        cycle (node:nodes) acc
+          | n == node = node:acc
+          | otherwise = cycle nodes (node:acc)
 
-{-run :: Int -> Trajectory -> State -> (Maybe Int, State)
-run n trajectory state 
-    | failure
-    | otherwise = (Nothing, emptyAccum)
+
+run dim = cycle_ $ foldl' iter (emptyAccum dim) [1..dim]
   where
-    failure = n == 0
--}
+    iter :: Accum -> Int -> Accum
+    iter acc n =
+        let 
+            trajectoryOutcome = trajectory n dim acc
+        in 
+            case trajectoryOutcome of
+                Cycle nodes cycle -> 
+                    let nodeArray' = (nodeArray_ acc) // [(i,True) | i <- nodes]
+                        len' = length cycle
+                        minVal' = minimum cycle
+                    in 
+                        if (length_ acc) < len' then Accum minVal' len' cycle nodeArray'
+                                                else acc {nodeArray_ = nodeArray'}
+                Failure nodes -> acc {nodeArray_ = (nodeArray_ acc) // [(i,True) | i <- nodes]}
 
-
--- trajectory 12496 emptyAccum
+main = do 
+    let result = run 1000000
+    print result
+    print $minimum result
