@@ -25,44 +25,51 @@ import Data.Numbers.Primes (primes)
 import qualified Data.Set as Set
 import Data.Array.Unboxed
 
-type Base = Int
-type Exp = Int
-type Factor = (Base, Exp)
+type FactorExp = (Int, Int) -- (b,e) represents b^e
 type Prime = Int
 
 -- Returns the prime factorisation of a number
-primeFactors :: Int -> [Factor] 
+primeFactors :: Int         -- Number to factor
+             -> [FactorExp] -- prime factors of the number
 primeFactors n = primeFactors' n (map fromIntegral primes) []
- 
-primeFactors' :: Int -> [Prime] -> [Factor] -> [Factor]
-primeFactors' n (p:ps) acc
-    | n == 1       = acc
-    | n < p*p      = (n, 1):acc
-    | rem n p == 0 = primeFactors' n' ps ((p, exp):acc)
-    | otherwise    = primeFactors' n ps acc
   where
-    (n', exp) = reduce (div n p) p 1
+    primeFactors' :: Int         -- number to factor
+                  -> [Prime]     -- primes
+                  -> [FactorExp] -- accumulator
+                  -> [FactorExp] -- prime factors of the number
+    primeFactors' n (p:ps) acc
+        | n == 1       = acc
+        | n < p*p      = (n, 1):acc
+        | rem n p == 0 = primeFactors' n' ps ((p, exp):acc)
+        | otherwise    = primeFactors' n ps acc
+      where
+        (n', exp) = reduce (n, 0)
 
-reduce n p exp
-    | r == 0 = reduce q p (exp+1)
-    | otherwise = (n, exp)
-  where
-    (q, r) = quotRem n p
+        {- reduce (n, a) -> (m, b)  
+
+        Reduces the value n*p^a with regards to the current prime p, i.e. that
+        n * p^a = m * p^b, with b the greatest possible value.
+        
+        As a pecial case: reduce (n, 0) = (m, b) => n = m * p^b
+        -}
+        reduce :: (Int, Int) -> (Int, Int)
+        reduce arg@(n, a) | rem n p == 0 = reduce (quot n p, a+1) 
+                          | otherwise    = arg
 
 -- Returns the divisors of a number
 divisors :: Int -> [Int]
 divisors n = combine $ primeFactors n
 
-expand :: Factor -> [Int]
+expand :: FactorExp -> [Int]
 expand (base, exp) = expand' base exp base [1]
 
 expand' base 0 cur acc = acc 
 expand' base exp cur acc = expand' base (exp-1) (cur*base) (cur:acc) 
 
-combine :: [Factor] -> [Int]
+combine :: [FactorExp] -> [Int]
 combine factors = combine' factors [1]
 
-combine' :: [Factor] -> [Int] -> [Int]
+combine' :: [FactorExp] -> [Int] -> [Int]
 combine' [] acc = acc
 combine' (factor:factors) acc = combine' factors (combine'' (expand factor) acc)
 
@@ -74,15 +81,13 @@ data Trajectory = Trajectory [Int] -- Trajectory
                              (Set.Set Int) -- nodes
                              deriving (Show) 
                              
-data Accum = Accum { minVal_ :: Int
-                   , length_ :: Int 
-                   , cycle_ :: [Int]
-                   , nodeArray_  :: (UArray Int Bool) -- visited
+data Accum = Accum { length_ :: Int 
+                   , nodes_ :: [Int]
+                   , isNodesVisited_  :: (UArray Int Bool) -- visited
                    } deriving (Show) 
                                
-data TrajectoryOutcome = Cycle [Int] -- nodes
-                               [Int] -- cycle
-                       | Failure [Int] -- nodes
+data TrajectoryOutcome = Cycle [Int]   -- nodes
+                       | NoCycle [Int] -- nodes
                        deriving (Show) 
 
 
@@ -90,48 +95,55 @@ data TrajectoryOutcome = Cycle [Int] -- nodes
 emptyTrajectory = Trajectory [] Set.empty
 emptyAccum :: Int -> Accum
 emptyAccum dim = 
-    Accum 0 -- minVal 
-          0 -- length
+    Accum 0 -- length
           [] -- cycles
           (array (1, dim) ((1, True) : [(i, False) | i <- [2..dim]])) -- visited
 
 step = sum . tail . divisors
 
 trajectory :: Int -> Int -> Accum -> TrajectoryOutcome
-trajectory n dim (Accum minVal len cycle nodeArray) 
+trajectory n dim (Accum len cycle nodeArray) 
     = trajectory_ n emptyTrajectory 
   where
     trajectory_ :: Int -> Trajectory -> TrajectoryOutcome
     trajectory_ n (Trajectory trajectory nodes)
-        | dim < n            = Failure trajectory
-        | nodeArray ! n      = Failure trajectory
-        | Set.member n nodes = Cycle trajectory (cycle trajectory [])
+        | dim < n            = NoCycle trajectory
+        | nodeArray ! n      = NoCycle trajectory
+        | Set.member n nodes = Cycle   (n:trajectory)
         | otherwise          = trajectory_ (step n) 
                                            (Trajectory (n:trajectory) 
                                                        (Set.insert n nodes))
-      where
-        cycle :: [Int] -> [Int] -> [Int]
-        cycle (node:nodes) acc
-          | n == node = node:acc
-          | otherwise = cycle nodes (node:acc)
+
+getCycle :: [Int] -> [Int]
+getCycle nodes = getCycle' (tail nodes) []
+  where
+    firstNode = head nodes
+    
+    getCycle' :: [Int] -> [Int] -> [Int]
+    getCycle' (node:nodes) acc
+      | firstNode == node = node:acc
+      | otherwise = getCycle' nodes (node:acc)
 
 
-run dim = cycle_ $ foldl' iter (emptyAccum dim) [1..dim]
+run dim = nodes_ $ foldl' iter (emptyAccum dim) [1..dim]
   where
     iter :: Accum -> Int -> Accum
-    iter acc n =
+    iter acc@(Accum len cycle isNodeVisited) n =
         let 
             trajectoryOutcome = trajectory n dim acc
         in 
             case trajectoryOutcome of
-                Cycle nodes cycle -> 
-                    let nodeArray' = (nodeArray_ acc) // [(i,True) | i <- nodes]
-                        len' = length cycle
-                        minVal' = minimum cycle
+                NoCycle nodes -> 
+                    acc {isNodesVisited_ = isNodeVisited // [(i,True) | i <- nodes]}
+                
+                Cycle nodes -> 
+                    let cycle' = getCycle nodes
+                        len' = length cycle'
+                        isNodeVisited' = (isNodesVisited_ acc) // [(i,True) | i <- nodes]
                     in 
-                        if (length_ acc) < len' then Accum minVal' len' cycle nodeArray'
-                                                else acc {nodeArray_ = nodeArray'}
-                Failure nodes -> acc {nodeArray_ = (nodeArray_ acc) // [(i,True) | i <- nodes]}
+                        if len < len' then Accum len' cycle' isNodeVisited'
+                                      else acc {isNodesVisited_ = isNodeVisited'}
+                
 
 main = do 
     let result = run 1000000
