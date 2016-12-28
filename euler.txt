@@ -1,0 +1,14 @@
+Packages needed: 
+---------------
+arithmoi 
+pell (need to hack the cabal file and to remove the constraint base<4.8)
+
+
+
+
+Simple
+99
+
+Pell's Equation 
+100
+
