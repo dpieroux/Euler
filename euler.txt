@@ -1,14 +1,17 @@
 Packages needed: 
 ---------------
 arithmoi 
-pell (need to hack the cabal file and to remove the constraint base<4.8)
+pell
+polynomial (needed to correct src\Data\VectorSpace\WrappedNum.hs, see in misc/)
 
 
 
 
-Simple
+Logarithm
 99
 
 Pell's Equation 
 100
 
+Polynomial interpolation
+101
