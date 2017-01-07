@@ -1,0 +1,129 @@
+{-------------------------------------------------------------------------------
+
+Let S(A) represent the sum of elements in set A of size n. We shall call it a
+special sum set if for any two non-empty disjoint subsets, B and C, the
+following properties are true:
+
+    (C1)    S(B) /= S(C); that is, sums of subsets cannot be equal.
+    (C2)    If B contains more elements than C then S(B) > S(C).
+
+For example, {81, 88, 75, 42, 87, 84, 86, 65} is not a special sum set because
+65 + 87 + 88 = 75 + 81 + 84, whereas {157, 150, 164, 119, 79, 159, 161, 139,
+158} satisfies both rules for all possible subset pair combinations and S(A) =
+1286.
+
+Using sets.txt, a 4K text file with one-hundred sets containing seven to twelve
+elements (the two examples given above are the first two sets in the file),
+identify all the special sum sets, A1, A2, ..., Ak, and find the value of S(A1)
++ S(A2) + ... + S(Ak).
+
+NOTE: This problem is related to Problem 103 and Problem 106.
+
+--------------------------------------------------------------------------------
+
+0. Notation
+===========
+
+    - A is a set of positive integer
+    - B and C are any pair of disjoint subsets of A such that #B ≤ #C
+    - B' and C' are a specific pair of disjoint subsets of A with #B' ≤ #C'
+    - a := #A; b := #B, c := #C, b' := #B', c' := #C'
+    - Ai contains all the elements of A excepted Ai := A \ {a(i)}
+    - SSS(A) means that "A is a Special Sum Set"
+
+
+1. Preliminary remarks
+======================
+
+1)  C2 implies C1 as soon as B and C don't have the same cardinal. So, in
+    practice we can replace (C1)-(C2) by:
+      
+        SSS(A) iif  | b = c ===> S(B) ≠ S(C)      (C3a)
+                    | b < c ===> S(B) < S(C)      (C3b)
+                                           
+2)  The empty set, singletons and set of two elements are trivially SSS:
+        a ≤ 2 ===> SSS(A)
+
+3)  If A is a SSS, then all its subsets of Ai are also SSS: 
+        SSS(A) ===> SSS(Ai)
+    By recurrence, any subset of A is a SSS.
+
+4)  However, all subsets of A being SSS does not imply SSS(A); because then all
+    set of 3 elements would be SSS, and thus all sets with 4 elements, etc...
+    and any set would be SSS.
+
+
+2. Checking if a set is SSS or not
+==================================
+
+As seen above, a necessary but not sufficient condition for SSS(A) is SSS(Ai)
+for all Ai. Therefore, in order to check if SSS(A), the first step is to check
+SSS(Ai).
+
+Suppose that it is the case, we still have to check that A is an SSS. However,
+we have only to consider the cases where a = b + c in (C3), as the other
+cases (i.e. a > b + c) are covered by the subsets of A.
+
+We split the discussion according the parity of a.
+
+
+2.1. a odd
+---------- 
+
+Let pose n := a div 2 ==> a = 2n+1
+
+Because its cardinal is odd, it is not possible to split A in two subsets B and
+C of equal cardinal, and thus b < c. So, the condition (C3a) doesn't lead to new
+conditions in addition to those of the subsets of A.
+
+We consider now (C3b). For any pair of subsets B and C such that b < c with a =
+b + c, it comes b ≤ n < n+1 ≤ c. This invites us to define
+
+    B' := {a(n+2), ..., a(2n+1)}
+    C' := {a(1), ..., a(n+1)}   
+
+Because b' = n < c' = n+1, S(B') < S(C') must hold if SSS(A).
+
+Obviously S(B) ≤ S(B') for all set B with b ≤ n; S(C') ≤ S(C) for all set C with
+n < c. Therefore b < c ==> S(B) ≤ S(B') and S(C') ≤ S(C). Otherwise said
+
+    S(B') < S(C') ==> S(B) < S(C)
+        
+Conclusion: if all subsets Ai are SSSs and if S(B') < S(C'), then A is a SSS.
+
+
+2.1. a odd
+---------- 
+
+Let pose n := a div 2 ==> a = 2n
+
+Contrary to the previous case, it is now possible to split A into two subsets of
+equal cardinal. Therefore it is necessary to check (C3a) each pair of set B and
+B of cardinal n. This problem is a variant of the "partition problem" [1], which
+is of the NP-class. However, contrary to the general case, two additional
+constraints holds:
+    
+    1.  The two subsets must be of same size.
+    2.  We are not talking about multi-sets but sets, i.e. integers are present
+        at most one time.
+
+Nevertheless, it looks like this problem is also NP. Algorithms can be devised
+to attempt to reach S(B)=S(C) efficiently. However they can't bring a negative
+answer: not terminating with two subsets B and C such that S(B)=S(C) doesn't
+mean that such a partition doesn't exist. Therefore in that case it is necessary
+to explore all possibilities.
+
+Concerning (C3b), all pairs of disjoint subsets (B, C) with b < c implies that
+b+c < a. So, the condition (C3b) doesn't lead to new conditions in addition to
+those of the subsets of A.
+
+Conclusion: if all subsets Ai are SSSs and if (C2a) holds for all pairs of
+disjoint subsets (B, C) with b=c=n, then A is a SSS.
+
+References
+----------
+
+[1] https://en.wikipedia.org/wiki/Partition_problem 
+[2] http://cs.stackexchange.com/questions/32882
+
+-------------------------------------------------------------------------------}
