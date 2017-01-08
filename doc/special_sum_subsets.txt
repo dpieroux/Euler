@@ -4,10 +4,10 @@ Let S(A) represent the sum of elements in set A of size n. We shall call it a
 special sum set if for any two non-empty disjoint subsets, B and C, the
 following properties are true:
 
-    (C1)    S(B) /= S(C); that is, sums of subsets cannot be equal.
-    (C2)    If B contains more elements than C then S(B) > S(C).
+    S(B) /= S(C); that is, sums of subsets cannot be equal.             (C1)
+    If B contains more elements than C then S(B) > S(C).                (C2)
 
-For example, {81, 88, 75, 42, 87, 84, 86, 65} is not a special sum set because
+For example, {81, 88, 75, 42, 87, 84, 86, 65} is not α special sum set because
 65 + 87 + 88 = 75 + 81 + 84, whereas {157, 150, 164, 119, 79, 159, 161, 139,
 158} satisfies both rules for all possible subset pair combinations and S(A) =
 1286.
@@ -24,83 +24,90 @@ NOTE: This problem is related to Problem 103 and Problem 106.
 0. Notation
 ===========
 
-    - A is a set of positive integer
-    - B and C are any pair of disjoint subsets of A such that #B ≤ #C
-    - B' and C' are a specific pair of disjoint subsets of A with #B' ≤ #C'
-    - a := #A; b := #B, c := #C, b' := #B', c' := #C'
-    - Ai contains all the elements of A excepted Ai := A \ {a(i)}
+    - Capital letters designate sets of positive integers
+    - The cardinal of a set is designated by the corresponding Greek letters,
+      e.g. α = #A
+    - a(1), ..., a(α) are the elements of A in increasing order
+    - A(i..j) with i≤j is the subset {a(i), ..., a(j)}
+    - n+A is the set obtained by adding the integer n to each element of A
     - SSS(A) means that "A is a Special Sum Set"
+    - ΣA is the sum of all elements of the set A.
+    - If the set A we are talking about is unambiguous, the we write Σ for ΣA
+      and Σ(p..q) for ΣA(p..q).
 
-
+                  
 1. Preliminary remarks
 ======================
 
-1)  C2 implies C1 as soon as B and C don't have the same cardinal. So, in
-    practice we can replace (C1)-(C2) by:
+1)  C2 implies C1 as soon as β ≠ γ. So, in practice we can replace (C1)-(C2) by
       
-        SSS(A) iif  | b = c ===> S(B) ≠ S(C)      (C3a)
-                    | b < c ===> S(B) < S(C)      (C3b)
+        SSS(A) iif  | β = γ ==> Σ(B) ≠ Σ(C)                             (C3a)
+                    | β < γ ==> Σ(B) < Σ(C)                             (C3b)
                                            
-2)  The empty set, singletons and set of two elements are trivially SSS:
-        a ≤ 2 ===> SSS(A)
+2)  The empty set, any singleton and set of two elements are trivially SSS:
+        α ≤ 2 ==> SSS(A)                                                (1)
 
-3)  If A is a SSS, then all its subsets of Ai are also SSS: 
-        SSS(A) ===> SSS(Ai)
-    By recurrence, any subset of A is a SSS.
+3)  If A is a SSS, then all its subsets are also SSS: 
+        SSS(A) ==> SSS(B) for all B ⊂ A                                (2)
+    
 
-4)  However, all subsets of A being SSS does not imply SSS(A); because then all
-    set of 3 elements would be SSS, and thus all sets with 4 elements, etc...
-    and any set would be SSS.
+4)  However, all proper subsets of A being SSS does not imply SSS(A). Indeed,
+    then any set of 3 elements would be SSS, and thus all sets with 4 elements,
+    and so one so that any set would be SSS.
+
+5)  Let b any positive integer. Then if A is a SSS,  
+        a) {b+a(1), ..., b+a(α)} is also a SSS
+        b) {b a(1), ..., b a(α)} is also a SSS
+    Note that 5a) doesn't hold if b is negative even if 0 < b+a(1).
 
 
 2. Checking if a set is SSS or not
 ==================================
 
-As seen above, a necessary but not sufficient condition for SSS(A) is SSS(Ai)
-for all Ai. Therefore, in order to check if SSS(A), the first step is to check
-SSS(Ai).
+For A to be SSS, all its subsets must be SSS. Therefore, a possible approach is
+to check that all sets obtained be removing one single element of A are SSS. Applying this recursively, all subsets will be checked.
 
 Suppose that it is the case, we still have to check that A is an SSS. However,
-we have only to consider the cases where a = b + c in (C3), as the other
-cases (i.e. a > b + c) are covered by the subsets of A.
+we have only to consider the cases where α = β + γ in (C3), as the other
+cases (i.e. α > β + c) are covered by the subsets of A.
 
-We split the discussion according the parity of a.
+We split the discussion according the parity of α.
 
 
-2.1. a odd
+2.1. α odd
 ---------- 
 
-Let pose n := a div 2 ==> a = 2n+1
+Let α := 2n+1
 
 Because its cardinal is odd, it is not possible to split A in two subsets B and
-C of equal cardinal, and thus b < c. So, the condition (C3a) doesn't lead to new
-conditions in addition to those of the subsets of A.
+C of equal cardinal. Therefore thus β < c. So, the condition (C3a) doesn't lead
+to new conditions in addition to those of the subsets of A.
 
-We consider now (C3b). For any pair of subsets B and C such that b < c with a =
-b + c, it comes b ≤ n < n+1 ≤ c. This invites us to define
+Concerning (C3b), for any pair of subsets B and C such that β < γ with α =
+β + γ, it comes β ≤ n < n+1 ≤ c. This invites us to define
 
-    B' := {a(n+2), ..., a(2n+1)}
-    C' := {a(1), ..., a(n+1)}   
+    B := A(n+2..2n+1} (==> β=n) 
+    C := A(1..n+1) (==> γ=n+1)
 
-Because b' = n < c' = n+1, S(B') < S(C') must hold if SSS(A).
+ΣB < ΣC must hold if SSS(A).
 
-Obviously S(B) ≤ S(B') for all set B with b ≤ n; S(C') ≤ S(C) for all set C with
-n < c. Therefore b < c ==> S(B) ≤ S(B') and S(C') ≤ S(C). Otherwise said
-
-    S(B') < S(C') ==> S(B) < S(C)
+Obviously ΣB is the S-maximum for all subsets with at most n elements, and ΣC is
+the S-minimum for all subsets with at least n+1 elements. Therefore the
+inequality (C3b) holds for any partition of A in two subsets.
         
-Conclusion: if all subsets Ai are SSSs and if S(B') < S(C'), then A is a SSS.
+Conclusion: if all subsets of A obtained by removing a single element of A are
+SSSs and if ΣA(n+2, α) < ΣA(1, n+1), then A is a SSS.
 
 
-2.1. a odd
----------- 
+2.1. α even
+----------- 
 
-Let pose n := a div 2 ==> a = 2n
+Let α := 2n
 
-Contrary to the previous case, it is now possible to split A into two subsets of
-equal cardinal. Therefore it is necessary to check (C3a) each pair of set B and
-B of cardinal n. This problem is a variant of the "partition problem" [1], which
-is of the NP-class. However, contrary to the general case, two additional
+Contrary to the previous case, it is now possible to partition A into two
+subsets of equal cardinal n. Therefore it is necessary to check (C3a) each pair
+of sets of cardinal n. This problem is a variant of the "partition problem" [1],
+which is of the NP-class. However, contrary to the general case, two additional
 constraints holds:
     
     1.  The two subsets must be of same size.
@@ -108,22 +115,60 @@ constraints holds:
         at most one time.
 
 Nevertheless, it looks like this problem is also NP. Algorithms can be devised
-to attempt to reach S(B)=S(C) efficiently. However they can't bring a negative
-answer: not terminating with two subsets B and C such that S(B)=S(C) doesn't
+to attempt to reach ΣB = ΣC efficiently. However they can't bring a negative
+answer: not terminating with two subsets B and C such that ΣB = ΣC doesn't
 mean that such a partition doesn't exist. Therefore in that case it is necessary
-to explore all possibilities.
+to explore all possibilities. Of course, the algorithm should be designed to stop exploring a case as soon as it is clear that it is either a SSS or it can't be SSS any more.
 
-Concerning (C3b), all pairs of disjoint subsets (B, C) with b < c implies that
-b+c < a. So, the condition (C3b) doesn't lead to new conditions in addition to
+Concerning (C3b), all pairs of disjoint subsets (B, C) with β < γ implies that
+β+γ < α. So, the condition (C3b) doesn't lead to new conditions in addition to
 those of the subsets of A.
 
-Conclusion: if all subsets Ai are SSSs and if (C2a) holds for all pairs of
-disjoint subsets (B, C) with b=c=n, then A is a SSS.
+Conclusion: if all subsets all subsets of A obtained by removing a single
+element of A are SSSs and if (C2a) holds for all pairs of disjoint subsets (B,
+C) with β=γ=n, then A is a SSS.
 
 References
 ----------
 
 [1] https://en.wikipedia.org/wiki/Partition_problem 
 [2] http://cs.stackexchange.com/questions/32882
+
+
+3. Bounds
+=========
+
+3.1. First and last item
+------------------------
+
+In this section we provide bounds for the first and the last elements of a SSS A.
+
+α=2n+1: Σ(1..n+1) > Σ(n+2..α)   ==> a(1) > Σ(n+2..α) - Σ(2..n+1)
+                                    a(α) < Σ(1..n+1) - Σ(n+2..α-1)
+
+α=2n:   Σ(1..n) > Σ(n+2..α)     ==> a(1) > Σ(n+2..α) - Σ(2..n) 
+                                    a(α) < Σ(1..n)   - Σ(n+2..α-1)
+
+It is interesting to note that, the first two elements define a upper bound for
+the last one: a(α) < a(1) + a(2).
+
+
+3.2. Minimal value of the added element in first place
+------------------------------------------------------
+
+In exercise 103, a new SSS B is built from the SSS A by adding b as first
+element and adding that same b to each element of A, to get A' = {b} U (b+A).
+Let check how large b must be.
+
+α=2n:   b + Σ(1..n) + bn > Σ(n+1..α) + bn   ==> b > Σ(n+1..α) - Σ(1..n)
+α=2n+1: b + Σ(1..n) + bn > Σ(n+2..α) + bn   ==> b > Σ(n+2..α) - Σ(1..n)
+
+Let us consider the element in the middle of the range:
+
+α=2n+1: Σ(1..n) + a(n+1) > Σ(n+2..α)        ==> a(n+1) > Σ(n+2..α) - Σ(1..n)
+α=2n:   Σ(1..n) + a(n) > Σ(n+2..α)          ==> a(n+1) > Σ(n+2..α) - Σ(1..n)
+
+=> By choosing that element, the relation for b are fulfilled and a new SSS A' is generated from A, as stated in exercise 103.
+
 
 -------------------------------------------------------------------------------}
