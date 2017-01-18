@@ -12,12 +12,7 @@ For example, {81, 88, 75, 42, 87, 84, 86, 65} is not α special sum set because
 158} satisfies both rules for all possible subset pair combinations and S(A) =
 1286.
 
-Using sets.txt, a 4K text file with one-hundred sets containing seven to twelve
-elements (the two examples given above are the first two sets in the file),
-identify all the special sum sets, A1, A2, ..., Ak, and find the value of S(A1)
-+ S(A2) + ... + S(Ak).
-
-NOTE: This problem is related to Problem 103 and Problem 106.
+NOTE: This is related to Problem 103, 105 and 106.
 
 --------------------------------------------------------------------------------
 
@@ -65,7 +60,8 @@ NOTE: This problem is related to Problem 103 and Problem 106.
 ==================================
 
 For A to be SSS, all its subsets must be SSS. Therefore, a possible approach is
-to check that all sets obtained be removing one single element of A are SSS. Applying this recursively, all subsets will be checked.
+to check that all sets obtained be removing one single element of A are SSS.
+Applying this recursively, all subsets will be checked.
 
 Suppose that it is the case, we still have to check that A is an SSS. However,
 we have only to consider the cases where α = β + γ in (C3), as the other
@@ -105,9 +101,14 @@ SSSs and if ΣA(n+2, α) < ΣA(1, n+1), then A is a SSS.
 Let α := 2n
 
 Contrary to the previous case, it is now possible to partition A into two
-subsets of equal cardinal n. Therefore it is necessary to check (C3a) each pair
-of sets of cardinal n. This problem is a variant of the "partition problem" [1],
-which is of the NP-class. However, contrary to the general case, two additional
+subsets of equal cardinal n. 
+
+If ΣA is odd, it is obviously not possible to partition it in two subsets B and
+C of equal sum (since ΣA = ΣB + ΣC, if ΣB = ΣC then ΣA must be even).
+
+Therefore it is only necessary to check (C3a) for each pair of sets of cardinal
+n if ΣA is odd. This problem is a variant of the "partition problem" [1],which
+is of the NP-class. However, contrary to the general case, two additional
 constraints holds:
     
     1.  The two subsets must be of same size.
@@ -116,9 +117,11 @@ constraints holds:
 
 Nevertheless, it looks like this problem is also NP. Algorithms can be devised
 to attempt to reach ΣB = ΣC efficiently. However they can't bring a negative
-answer: not terminating with two subsets B and C such that ΣB = ΣC doesn't
-mean that such a partition doesn't exist. Therefore in that case it is necessary
-to explore all possibilities. Of course, the algorithm should be designed to stop exploring a case as soon as it is clear that it is either a SSS or it can't be SSS any more.
+answer: not terminating with two subsets B and C such that ΣB = ΣC doesn't mean
+that such a partition doesn't exist. Therefore in that case it is necessary to
+explore all possibilities. Of course, the algorithm should be designed to stop
+exploring a case as soon as it is clear that it is either a SSS or it can't be
+SSS any more.
 
 Concerning (C3b), all pairs of disjoint subsets (B, C) with β < γ implies that
 β+γ < α. So, the condition (C3b) doesn't lead to new conditions in addition to
@@ -141,7 +144,8 @@ References
 3.1. First and last item
 ------------------------
 
-In this section we provide bounds for the first and the last elements of a SSS A.
+In this section we provide bounds for the first and the last elements of a SSS
+A.
 
 α=2n+1: Σ(1..n+1) > Σ(n+2..α)   ==> a(1) > Σ(n+2..α) - Σ(2..n+1)
                                     a(α) < Σ(1..n+1) - Σ(n+2..α-1)
@@ -149,12 +153,18 @@ In this section we provide bounds for the first and the last elements of a SSS A
 α=2n:   Σ(1..n) > Σ(n+2..α)     ==> a(1) > Σ(n+2..α) - Σ(2..n) 
                                     a(α) < Σ(1..n)   - Σ(n+2..α-1)
 
+These two equations can be rewritten more generally as
+    a(1) > Σ(α/2+2 .. α) - Σ(2 .. (α+1)/2)
+    a(α) < Σ(1 .. (α+1)/2) - Σ (α/2+2 .. α-1)
+
+
 It is interesting to note that, the first two elements define a upper bound for
 the last one: a(α) < a(1) + a(2).
 
 
-3.2. Minimal value of the added element in first place
-------------------------------------------------------
+
+3.2. Minimal value of the added element at the beginning
+--------------------------------------------------------
 
 In exercise 103, a new SSS B is built from the SSS A by adding b as first
 element and adding that same b to each element of A, to get A' = {b} U (b+A).
@@ -168,7 +178,125 @@ Let us consider the element in the middle of the range:
 α=2n+1: Σ(1..n) + a(n+1) > Σ(n+2..α)        ==> a(n+1) > Σ(n+2..α) - Σ(1..n)
 α=2n:   Σ(1..n) + a(n) > Σ(n+2..α)          ==> a(n+1) > Σ(n+2..α) - Σ(1..n)
 
-=> By choosing that element, the relation for b are fulfilled and a new SSS A' is generated from A, as stated in exercise 103.
+=> By choosing that element, the relation for b are fulfilled and a new SSS A'
+is generated from A, as stated in exercise 103.
+
+
+3.2. Bounds for adding a new greatest element b to a set A
+----------------------------------------------------------
+
+a) α=2n
+
+Σ(1..n) + b > Σ(n+1..α) ==> Σ(n+1..α) - Σ(1..n) < b
+Σ(1..n+1) > Σ(n+2..α) + b ==> b < Σ(1..n+1) - Σ(n+2..α)
+
+==> a(n+1) - X <= b <= a(n+1) + X with X := Σ(1..n) - Σ(n+2..α) - 1
+
+
+b) α=2n+1
+
+Σ(1..n) + b > Σ(n+2..α)   ==> Σ(n+2..α) - Σ(1..n) < b
+Σ(1..n+1) > Σ(n+3..α) + b ==> b < Σ(1..n+1) - Σ(n+3..α) 
+
+==> a(n+2) - X <= b <= a(n+1) + X with X := Σ(1..n) - Σ(n+3..α) - 1
+
+
+4. Adding a new element at the end of an SSS
+============================================
+
+Here we assume that we have an SSS A and we attempt to extend it by adding an
+element x at the end (i.e. x > all elements of A).
+
+4.1. Rule C3b
+-------------
+
+4.1.1 α = 2n
+............
+
+The subset under study, [a(1), .., a(2n), x], has 2n+1 elements. 
+
+The worst case is obtained by selecting the n+1 smallest item of A on the one
+side, and the n-1 largest items of A and the new element x on the other side:
+    
+    Σ(1..n+1) > Σ(n+2..2n) + x 
+    ==> a(2n) < x < Σ(1..n+1) - Σ(n+2..2n)                              (C4)
+
+But what about adding b to the subset of A?
+
+
+4.1.1.a Let's remove a(i) from A, with i <= n+1 
+. . . . . . . . . . . . . . . . . . . . . . . . 
+
+We are left with 2n elements, x included. So the worst case is obtained by
+taking the n+1 smallest elements of A excepted a(i) (=> n elements) on the one
+side, and the n-2 largest elements of A and x on the other side (=> n-1
+elements). For this set to be an SSS, it is necessary that
+    
+    Σ(1..n+1) - a(i) > Σ(n+3..2n) + x 
+    Σ(1..n+1) + [a(n+2)-a(i)] > Σ(n+2..2n) + x
+
+With (C4) and because [a(n+2)- a(i)] > 0, that condition holds.
+
+
+4.1.1.b Let's remove a(i) from A, with i >= n+2
+. . . . . . . . . . . . . . . . . . . . . . . .
+
+We are left with 2n elements, x included. So the worst case is obtained by
+taking the n smallest elements of A on the one side, and the largest n-1
+elements of A excluded a(i) and x on the other side. For this set to be an SSS, it is necessary
+that
+
+    Σ(1..n) > Σ(n+2..2n) - a(i) + x
+    Σ(1..n+1) + [a(i)-a(n+1)] > Σ(n+2..2n) + x
+
+Here again, (C4) and [a(n+2)- a(i)] > 0, implies that the condition is
+fulfilled.
+
+4.1.1 α = 2n+1
+..............
+
+The subset under study, [a(1), .., a(2n+1), x], has 2n+2 elements. 
+
+The worst case is obtained by selecting the n+1 smallest item of A on the one
+side of A on the one side, and the n-1 largest items and the new element x on
+the other side:
+    
+    Σ(1..n+1) > Σ(n+3..2n+1) + x 
+    ==> a(2n+1) < x < Σ(1..n+1) - Σ(n+3..2n+1)                          (C5)
+
+But what about adding b to the subset of A?
+
+
+4.1.1.a Let's remove a(i) from A, with i <= n+1 
+. . . . . . . . . . . . . . . . . . . . . . . . 
+
+We are left with 2n+1 elements, x included. So the worst case is obtained by
+taking the n+2 smallest elements of A excepted a(i) (=> n+1 elements) on the one
+side, and the n-1 largest elements of A and x on the other side (=> n elements).
+For this set to be an SSS, it is necessary that
+    
+    Σ(1..n+2) - a(i) > Σ(n+3..2n+1) + x 
+    Σ(1..n+1) + [a(n+2)-a(i)] > Σ(n+2..2n+1) + x
+
+That condition holds because of (C5) and [a(n+2) - a(i)] > 0. 
+
+
+4.1.1.b Let's remove a(i) from A, with i >= n+2
+. . . . . . . . . . . . . . . . . . . . . . . .
+
+We are left with 2n+1 elements, x included. So the worst case is obtained by
+taking the n+1 smallest elements of A on the one side, and the largest n
+elements of A excluded a(i) (=> n-1 elements) and x on the other side. For this
+set to be an SSS, it is necessary that
+
+    Σ(1..n+1) > Σ(n+2..2n+1) - a(i) + x
+    Σ(1..n+1) + [a(i)-a(n+2)] > Σ(n+3..2n+1) + x
+
+That condition holds because of (C5) and [a(i) - a(n+2)] >= 0.
+
+
+4.1 - CONCLUSION: if C3b is fulfilled after the addition of an new greatest
+element, it will hold for all subsets of the original set, augmented by x.
 
 
 -------------------------------------------------------------------------------}
