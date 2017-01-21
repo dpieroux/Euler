@@ -23,46 +23,71 @@ NOTE: This problem is related to Problem 103 and Problem 106.
 
 See special_sum_subsets.txt in 'doc\'.
 
-Here it looks like the most effective approach is to construct all pairs of
-disjoint sets by stopping as soon as it is detected that the set current set is
-not SSS.
-
-However, instead of building the subset pairs, we compute directly the difference of their respective sum and of their cardinal.
+We use the result of section 4.1, including the final remarks.
 
 -------------------------------------------------------------------------------}
 
-import Data.List
+import Data.Maybe
 
-type Set = [Int]
-type D_Sum = Int  -- Difference of the sums of the element of two subsets
-type D_Card = Int -- Difference of the cardinal of two subsets
-type Sum = Int
-type Length = Int
+-- CardSum is a set place holder, retaining only the set cardinal and the sum of
+-- its elements.
+type CardSum = (Int, Int)
 
-sigma :: Set -> Int
-sigma ls = let s = sum ls in if isSSS ls [] s (length ls) then s else 0
+(<+>) :: Int -> CardSum -> CardSum
+(<+>) n (c, s) = (c+1, s+n)
 
-isSSS :: Set -> [(D_Sum, D_Card)] -> Sum -> Length -> Bool
-isSSS (l:ls) acc sum card 
-  = let subset1 = map (\(s, c) -> (s+l,c+1)) acc
-        subset2 = map (\(s, c) -> (s-l,c-1)) acc
-        
-        isValid (s, c) | c > 0  = s > 0
-                       | c < 0  = s < 0
-                       | c == 0 = s /= 0 
-        
-        continue =  (all isValid subset1) 
-                 && (all isValid subset2)
-        
-        acc' = (l, 1) : (-l, -1) : (subset1 ++ subset2 ++ acc)
-    
-    in if continue then isSSS ls acc' (sum-l) (card-1) 
-                   else False
+emptyCardSum = [(0, 0)] -- CardSum of the empty set
 
-isSSS [] _ _ _ = True
+-- SSSet is the data type for a Special Sum Set. 
+data SSSet = SSSet { sum_ :: Int        -- the sum of the elements
+                   , subsets_ :: [CardSum] -- the CardSum of its subsets 
+                   } deriving Show 
+
+emptySet = SSSet 0 emptyCardSum
+
+addElement :: Int -> SSSet -> Maybe SSSet
+addElement n set = if isNothing mergeResult 
+                   then Nothing
+                   else Just $ SSSet (sum_ set + n) $ fromJust mergeResult
+
+  where
+    subsets = subsets_ set
+    subsets' = map (n <+>) subsets
+    mergeResult = merge subsets subsets' (-1) []
+
+-- Specific sort merge implementation
+merge :: [CardSum] -> [CardSum] -> Int -> [CardSum] -> Maybe [CardSum]
+merge l1@((c1, s1):l1') l2@((c2, s2):l2') curSum acc
+    | s1 <= curSum || s2 <= curSum = Nothing
+    -- curSum < s1, s2
+    | c1 < c2 = if s1 < s2 then merge l1' l2 s1 ((c1, s1) : acc) 
+                           else Nothing
+    | c2 < c1 = if s2 < s1 then merge l1 l2' s2 ((c2, s2) : acc) 
+                           else Nothing
+    -- c1 == c2
+    | s1 < s2 = merge l1' l2 s1 ((c1, s1) : acc) 
+    | s2 < s1 = merge l1 l2' s2 ((c2, s2) : acc)
+    | otherwise = Nothing                                  
+merge [] l2 _ acc = Just (reverse acc ++ l2) 
+
+buildSss :: [Int] -> Maybe SSSet
+buildSss ns = buildSss' ns emptySet
+  where  
+    buildSss' :: [Int] -> SSSet -> Maybe SSSet
+    buildSss' (n:ns) set = 
+      let set' = addElement n set 
+      in if isJust set' then buildSss' ns $ fromJust set'
+                        else Nothing
+    buildSss' [] set = Just set
+
+sssSum :: Maybe SSSet -> Int
+sssSum Nothing = 0
+sssSum (Just set) = sum_ set
+
+--------------------------------------------------------------------------------
 
 main = do 
     input <- readFile "data/sets.txt"
-    let samples = (map (\l -> read $ '[' : l ++ "]") $ lines $ input) :: [Set]
+    let samples = (map (\l -> read $ '[' : l ++ "]") $ lines $ input) :: [[Int]]
     putStr "Sum of SSS sets: "
-    print $ sum $ map sigma samples
+    print $ sum $ map (sssSum . buildSss) samples
