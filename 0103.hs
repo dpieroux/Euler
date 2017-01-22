@@ -87,9 +87,6 @@ addElement n cardSums = merge cardSums (map (n <+>) cardSums) (-1) []
 -- Return a empty list if the result is not SSS.
 merge :: [CardSum] -> [CardSum] -> Int -> [CardSum] -> [CardSum]
 merge l1@((c1, s1):l1') l2@((c2, s2):l2') curSum acc
-    | s1 <= curSum || s2 <= curSum = []
-    -- curSum < s1, s2. 
-
     -- No need to check for the rule C3b; the build-up of the sets warranties
     -- that the condition is fullfiled.
     | c1 < c2 = merge l1' l2 s1 ((c1, s1) : acc) 
