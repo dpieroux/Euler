@@ -244,7 +244,7 @@ Note that this approach can easily be extended to check C3b too. In turns this a
 4.2. Rule C3b
 -------------
 
-4.1.1 α = 2n
+4.2.1 α = 2n
 ............
 
 The subset under study, A' = [a(1), .., a(2n), x], has 2n+1 elements. 
@@ -258,7 +258,7 @@ side, and the n-1 largest items of A and the new element x on the other side:
 But what about adding b to the subset of A?
 
 
-4.1.1.a Let's remove a(i) from A, with i <= n+1 
+4.2.1.a Let's remove a(i) from A, with i <= n+1 
 . . . . . . . . . . . . . . . . . . . . . . . . 
 
 We are left with 2n elements, x included. So the worst case is obtained by
@@ -272,7 +272,7 @@ elements). For this set to be an SSS, it is necessary that
 With (C4) and because [a(n+2)- a(i)] > 0, that condition holds.
 
 
-4.1.1.b Let's remove a(i) from A, with i >= n+2
+4.2.1.b Let's remove a(i) from A, with i >= n+2
 . . . . . . . . . . . . . . . . . . . . . . . .
 
 We are left with 2n elements, x included. So the worst case is obtained by
@@ -286,7 +286,7 @@ that
 Here again, (C4) and [a(n+2)- a(i)] > 0, implies that the condition is
 fulfilled.
 
-4.1.1 α = 2n+1
+4.2.2 α = 2n+1
 ..............
 
 The subset under study, [a(1), .., a(2n+1), x], has 2n+2 elements. 
@@ -301,7 +301,7 @@ the other side:
 But what about adding b to the subset of A?
 
 
-4.1.1.a Let's remove a(i) from A, with i <= n+1 
+4.2.2.a Let's remove a(i) from A, with i <= n+1 
 . . . . . . . . . . . . . . . . . . . . . . . . 
 
 We are left with 2n+1 elements, x included. So the worst case is obtained by
@@ -315,7 +315,7 @@ For this set to be an SSS, it is necessary that
 That condition holds because of (C5) and [a(n+2) - a(i)] > 0. 
 
 
-4.1.1.b Let's remove a(i) from A, with i >= n+2
+4.2.2.b Let's remove a(i) from A, with i >= n+2
 . . . . . . . . . . . . . . . . . . . . . . . .
 
 We are left with 2n+1 elements, x included. So the worst case is obtained by
@@ -331,6 +331,12 @@ That condition holds because of (C5) and [a(i) - a(n+2)] >= 0.
 
 CONCLUSION: if C3b is still fulfilled after the addition of an new greatest
 element, it will hold for all subsets of the original set, augmented by x.
+
+
+4.2.3 Uniformisation
+....................
+
+(C4) and (C5) can be rewritten as:  a(α) < x < Σ(1..α/2+1) - Σ((α+1)/2+2..α)
 
 
 -------------------------------------------------------------------------------}
