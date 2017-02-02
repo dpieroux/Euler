@@ -1,0 +1,8 @@
+To be checked:
+
+
+-- only valid for numbers of 9 digits (i.e. for n, 10^8<=n<10^9)
+isPandigital n = 1022==u n
+    where u 0 = 0
+          u x = 2^r + u q
+              where (q, r) = quotRem x 10

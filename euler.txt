@@ -8,10 +8,22 @@ polynomial (needed to correct src\Data\VectorSpace\WrappedNum.hs, see in misc/)
 
 
 Logarithm
-99
+    99
 
 Pell's Equation 
-100
+    100
 
 Polynomial interpolation
-101
+    101
+
+Interior of a curve
+    102
+
+Fibonacci
+    104
+
+Pandigital
+    104
+
+Special Sum Set
+    103, 105, 106
