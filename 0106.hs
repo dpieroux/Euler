@@ -45,16 +45,51 @@ As mentioned in doc/special_sum_subsets.txt, if the second condition holds then
 only pairs of of sets of same cardinal must be checked. Thus, in the
 expressions above, terms that are not divided by 2 are thus not concerned.
 
-In addition, pairs of singletons don't have to be checked because such a
-singleton contains a different element from the other one.
+Pairs of sets ({ai}, {bi}) such that ai<bi for all i, or ai>bi for all i
+(considering the ai and bi sorted by increasing order) doesn't need to be
+checked either. As a special case, singletons don't have to be checked.
 
-Let consider two subsets of n elements {ai} and {bi} with i=1..n. If ai<bi for
-each i, then there is no need to check either, because it is then clear that the
-sum of the ai will be smaller than the sum of the bi.
+Let take n different numbers. We choose 2k numbers from then, which are then
+split in two sets of equal cardinal, A and B, such that A contains the smallest
+number (to avoid counting twice the same configuration). The number of such
+pairs is C(n, 2k)*C(2k-1, k-1).
 
-Given N elements, There are  C(N,n)*C(N-n,n)/2 distinct pairs of ({ai}, {bi}} of
-n elements, with a1 being the the smallest elements of all.
+How many of them need to be checked? In practice we simply needs to consider one
+of the configurations of 2k numbers (e.g. [1..2k]), since we only have to check
+ai<bi for all i.
 
-Rational: we select n elements out of N to be part of {ai}, and then n elements
-out of the N-n left for {yi}. We sort the xi and the yi and we drop the pairs
-for which y1 is the smallest number.
+If σ(k) is the number of pairs of k-element sets that needs configuration, then
+the answer to the question is Sum(k=2.. n/2) C(n, 2k)*σ(k)
+
+-------------------------------------------------------------------------------}
+
+import Data.List
+
+combination n k 
+  | 2*k <= n  = product [n-k+1 .. n] `div` product [1 .. k]
+  | otherwise = let k' = n-k in product [n-k'+1 .. n] `div` product [1 .. k']
+
+euler n = sum [combination n (2*k) * sigma k | k <- [2.. (div n 2)]]
+
+{-------------------------------------------------------------------------------
+
+To compute sigma k, we consider all the way to split [1..2k] in two sublists a
+and b of length n, with a1=1, and then we count those for which it is not true
+that ai < bi for all i.
+
+-------------------------------------------------------------------------------}
+
+split (e:es) = filter (\(l, r) -> k == length l)
+             $ split' es [([e], [])]
+  where
+    k = div (1 + length es) 2 
+    split' es acc = foldl' update acc es
+
+    update :: [([Int], [Int])] -> Int -> [([Int], [Int])]
+    update acc e = map (\(l, r) -> ((e:l), r)) acc 
+                 ++ map (\(l, r) -> (l, (e:r))) acc
+
+
+sigma k = length $ filter (\ls -> any (<0) ls) 
+         $ map (\(l, r) -> zipWith (-) r l)
+         $ split [1..2*k]
