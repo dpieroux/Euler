@@ -105,8 +105,6 @@ data Update = Update { update_node :: NodeIx
 
 minWeight :: Graph -> Weight
 minWeight graph = sum $ map node_edgeWeight updatedNodes
---minWeight :: Graph -> Nodes
---minWeight graph = evolve nodes updates 1
   where
     (_, size) = bounds graph 
     nodes = array (1, size)
@@ -115,7 +113,6 @@ minWeight graph = sum $ map node_edgeWeight updatedNodes
     updatedNodes = elems $ evolve nodes updates 1
 
     evolve :: Nodes -> [Update] -> Clock -> Nodes
-    evolve nodes [] _ = nodes
     evolve nodes ((Update uIx uClk):updates) clk 
         | needUpdate = evolve nodes' updates' (clk+1)
         | otherwise = evolve nodes updates clk
@@ -138,6 +135,7 @@ minWeight graph = sum $ map node_edgeWeight updatedNodes
         node' = Node ancestors' weight' clk
         nodes' = nodes // [(uIx, node')]
         updates' = foldr (\ix acc -> (Update ix clk):acc) updates neighboursIx
+    evolve nodes [] _ = nodes
 
 
 edgesSample :: Graph
@@ -151,3 +149,32 @@ edgesSample = accumArray (\a b -> b:a) [] (1, 7)
                   , (5, 7, 11)
                   , (6, 7, 27)]                      
 
+euler :: Graph -> IO()
+euler graph = do
+  let graphSum = (`div` 2) . sum . map edge_weight . concat $ elems graph
+  let minW = minWeight graph
+  putStrLn $ "  Full graph: " ++ show graphSum
+  putStrLn $ "  Min graph:  " ++ show minW
+  putStrLn $ "  Gain:       " ++ show (graphSum-minW)
+
+readGraph :: IO(Graph)
+readGraph = do
+  input <- readFile ("data/p107_network.txt")
+  let lines = Prelude.lines input
+  let lines' = let update '-' = ('0':)
+                   update c   = (c:)
+               in map (\l -> read ('[' : foldr update  "]" l)) lines :: [[Int]]
+  
+  return (accumArray (\a b -> b:a) [] (1, length lines')
+                     [(ix, Edge jx val) | (ix, row) <- zip [1..] lines' 
+                                        , (jx, val) <- zip [1..] row 
+                                        , val /= 0])
+
+
+main = do
+  putStrLn "Sample"
+  euler edgesSample
+
+  putStrLn "Actual"
+  graph <- readGraph
+  euler graph
