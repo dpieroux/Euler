@@ -45,136 +45,178 @@ that the network remains connected.
 
 --------------------------------------------------------------------------------
 
-The solution is to start with a null path and to add one of the nodes (the
-initial node) to it.
+The principle is to look for cycles by walking the graph depth-first. Everytime
+a cycle is found, the edge with the greatest weight is removed. 
 
-Once a node is added to the path, let's call it the current node, its neighbours
-are checked. If they are not yet connect to the path, they are also added to the
-path through that node. If they are already part of a path, it is check if
-connecting to the current node instead reduces the total path weight.
-
-This is the case if
-    - the neighbour is not already in the path of to the current node (to avoid
-      making a cycle)
-    - the weight of the edge from the current node to the neighbour is smaller
-      that the weight of the immediate edge currently connecting the neighbour
-      to initial node.
-
-Whenever it is the case, the path to the neighbour is updated and the neighbours
-of the updated neighbour are checked.
-
-The process stops once there is no more checks to do.
-
-Because requests to re-evaluate a node can accumulate before the node is re-
-evaluated, a clock mechanism is set-up. A request to re-evaluate a node contains
-the clock at which it was emitted; each node contains also the clock at which it
-was updated last time (or 0 if the node was never updated yet). The node is
-checked for an update only if the update request was emitted after the last
-update of the node update.
+Note: this algorithm is more complex and less efficient than the Prim's algorithm, which will be implemented next (in 0107b.hs).
 
 -------------------------------------------------------------------------------}
 
 import Data.Array.IArray
-import Data.List(minimumBy)
+import Data.Maybe
+import Data.List
 
-maxInt = maxBound :: Int
+--------------------------------------------------------------------------------
 
-type NodeIx = Int
 type Weight = Int
-type Clock = Int
+type Node = Int
+type Path = [Node]
+type Cycle = [Node]
 
-data Node = Node { node_ancestors :: [NodeIx]
-                 , node_edgeWeight :: Weight
-                 , node_clk :: Clock 
-                 } deriving Show
+type Graph = Array (Node, Node) EdgeState
 
-nullNode = Node [] maxInt (-1) 
-
-data Edge = Edge { edge_nodeIx :: NodeIx
-                 , edge_weight :: Weight
-                 } deriving Show
-
-type Graph = Array NodeIx [Edge]
-
-type Nodes = Array NodeIx Node
-
-data Update = Update { update_node :: NodeIx 
-                     , update_clk  :: Clock
-                     } deriving Show
+data EdgeState = None 
+               | InGraph Weight 
+               | Unused Weight 
+               deriving Show
 
 
-minWeight :: Graph -> Weight
-minWeight graph = sum $ map node_edgeWeight updatedNodes
+--------------------------------------------------------------------------------
+
+-- Reduce a connected graph into a connected tree such that the sum of the
+-- weight of the edges is minimum.
+reduce :: Graph -> Graph
+reduce graph = graph_iter [1] $ reset graph
   where
-    (_, size) = bounds graph 
-    nodes = array (1, size)
-          $ (1, Node [] 0 0) : [(i, nullNode) | i <- [2..size]]
-    updates = map (\edge -> Update (edge_nodeIx edge) 0) (graph ! 1)
-    updatedNodes = elems $ evolve nodes updates 1
-
-    evolve :: Nodes -> [Update] -> Clock -> Nodes
-    evolve nodes ((Update uIx uClk):updates) clk 
-        | needUpdate = evolve nodes' updates' (clk+1)
-        | otherwise = evolve nodes updates clk
+    graph_iter :: Path -> Graph -> Graph
+    graph_iter path graph
+        | null      path       = graph
+        | isNothing mbNextNode = graph_iter (tail path) graph
+        | isNothing mbCycle    = graph_iter updatedPath updatedGraph
+        | otherwise            = graph_iter rewindedPath reducedGraph
       where
-        node = nodes ! uIx
-        edges = graph ! uIx
-        neighboursIx = map edge_nodeIx edges
-        neighbours = map (nodes!) neighboursIx
-        validAncestorsIx = filter (not . elem uIx . node_ancestors . (nodes!)) 
-                                  neighboursIx
-        validEdges = filter (flip elem validAncestorsIx . edge_nodeIx) edges
-        minEdge = minimumBy (\a b -> compare (edge_weight a) (edge_weight b)) 
-                            validEdges
-        needUpdate = node_clk node < uClk 
-                  && (edge_weight minEdge) < node_edgeWeight node
+        lastNode = head path
+        mbNextNode = pickUnusedEdgeFrom lastNode graph
+        Just nextNode = mbNextNode
+    
+        updatedPath = nextNode : path
+        mbCycle = getCycle updatedPath
+        Just cycle = mbCycle
+    
+        updatedGraph = useEdge lastNode nextNode graph
+    
+        (fromNode, toNode) = locateEdgeToRemove cycle graph
+        (rewindedPath, rewindedGraph) = rewindUpTo toNode path graph
+        reducedGraph = removeEdge fromNode toNode rewindedGraph
 
-        fromIx = edge_nodeIx minEdge
-        weight' = edge_weight minEdge
-        ancestors' = fromIx : node_ancestors (nodes ! fromIx)
-        node' = Node ancestors' weight' clk
-        nodes' = nodes // [(uIx, node')]
-        updates' = foldr (\ix acc -> (Update ix clk):acc) updates neighboursIx
-    evolve nodes [] _ = nodes
+-- Turn the edges from being "in the graph" to "free"
+reset :: Graph -> Graph
+reset graph = amap update graph
+  where
+    update None = None
+    update (InGraph weight) = Unused weight 
+
+-- Select an unused edge from a node and return the corresponding neightbour
+-- node.
+pickUnusedEdgeFrom :: Node -> Graph -> Maybe Node
+pickUnusedEdgeFrom node graph 
+    | null nodes = Nothing  
+    | otherwise  = Just $ head nodes
+  where
+    nodes = [j | j <- [1..size graph], isUnused $ graph ! (node, j)]
+
+--------------------------------------------------------------------------------
+
+-- Return a graph from an array describing the weight of the edges between each
+-- pair of nodes. A weight of zero indicates a lack of edge.
+makeGraphFromArray :: Array (Int, Int) Int -> Graph
+makeGraphFromArray = amap (\w -> if w == 0 then None else InGraph w)
+
+-- Return the weight of the edge of a graph
+weight :: Graph -> Weight
+weight graph = (foldl' (\a e -> a + edge_weight e) 0 $ elems graph) `div` 2
+
+size :: Graph -> Node
+size = fst . snd . bounds
+
+-- Check of edge is unused
+isUnused (Unused _) = True
+isUnused _ = False
 
 
-edgesSample :: Graph
-edgesSample = accumArray (\a b -> b:a) [] (1, 7)
-            $ concat
-            $ map (\(i, j, w) -> [(i, Edge j w), (j, Edge i w)])
-                  [ (1, 2, 16), (1, 3, 12), (1, 4, 21)
-                  , (2, 4, 17), (2, 5, 20)
-                  , (3, 4, 28), (3, 6, 31)
-                  , (4, 5, 18), (4, 6, 19), (4, 7, 23)
-                  , (5, 7, 11)
-                  , (6, 7, 27)]                      
+useEdge :: Node -> Node -> Graph -> Graph 
+useEdge n1 n2 graph = graph // [((n1, n2), edge'), ((n2, n1), edge')]
+  where
+    Unused weight = graph ! (n1, n2)
+    edge' = InGraph weight
+
+releaseEdge :: Node -> Node -> Graph -> Graph 
+releaseEdge n1 n2 graph = graph // [((n1, n2), edge'), ((n2, n1), edge')]
+  where
+    InGraph weight = graph ! (n1, n2)
+    edge' = Unused weight
+   
+
+removeEdge :: Node -> Node -> Graph -> Graph 
+removeEdge n1 n2 graph = graph // [((n1, n2), None), ((n2, n1), None)]
+
+edge_weight :: EdgeState -> Int
+edge_weight None = 0
+edge_weight (InGraph weight) = weight
+edge_weight (Unused weight)  = weight
+
+--------------------------------------------------------------------------------
+
+-- Return the nodes making a cycle.  The first node and the last node of the
+-- cycle are the same node.
+getCycle :: Path -> Maybe Cycle
+getCycle (n:ns)
+    | isNothing mbCycleStart = Nothing
+    | otherwise = Just (n : take (1 + fromJust mbCycleStart) ns)
+  where
+    mbCycleStart = elemIndex n ns
+    
+--------------------------------------------------------------------------------
+
+locateEdgeToRemove:: Cycle -> Graph -> (Node, Node)
+locateEdgeToRemove cycle graph 
+    = snd $ maximumBy 
+        (\(w1, _) (w2, _) -> compare w1 w2)
+        [(edge_weight $ graph ! edge, edge) | edge <- zip cycle (tail cycle)]  
+
+rewindUpTo :: Node -> Path -> Graph -> (Path, Graph)
+rewindUpTo node path@(n:ns) graph
+    | node == n = (path , graph)
+    | otherwise = rewindUpTo node ns $ releaseEdge n (head ns) graph
+  where
+    m = head ns
+
+--------------------------------------------------------------------------------
 
 euler :: Graph -> IO()
 euler graph = do
-  let graphSum = (`div` 2) . sum . map edge_weight . concat $ elems graph
-  let minW = minWeight graph
-  putStrLn $ "  Full graph: " ++ show graphSum
-  putStrLn $ "  Min graph:  " ++ show minW
-  putStrLn $ "  Gain:       " ++ show (graphSum-minW)
+    let reducedGraph = reduce graph
+    putStr $ "Initial weight: "; print $ weight graph
+    putStr $ "Reduced weight: "; print $ weight reducedGraph
+    putStr $ "Difference:     "; print $ weight graph - weight reducedGraph
+
+
+graphSample :: Graph
+graphSample = makeGraphFromArray 
+            $ listArray ((1, 1), (7, 7)) [  0,  16,  12,  21,   0,   0,   0
+                                         , 16,   0,   0,  17,  20,   0,   0
+                                         , 12,   0,   0,  28,   0,  31,   0
+                                         , 21,  17,  28,   0,  18,  19,  23
+                                         ,  0,  20,   0,  18,   0,   0,  11
+                                         ,  0,   0,  31,  19,   0,   0,  27
+                                         ,  0,   0,   0,  23,  11,  27,   0]
 
 readGraph :: IO(Graph)
 readGraph = do
-  input <- readFile ("data/p107_network.txt")
-  let lines = Prelude.lines input
-  let lines' = let update '-' = ('0':)
-                   update c   = (c:)
-               in map (\l -> read ('[' : foldr update  "]" l)) lines :: [[Int]]
-  
-  return (accumArray (\a b -> b:a) [] (1, length lines')
-                     [(ix, Edge jx val) | (ix, row) <- zip [1..] lines' 
-                                        , (jx, val) <- zip [1..] row 
-                                        , val /= 0])
+    input <- readFile ("data/p107_network.txt")
+    
+    let lines = Prelude.lines input
 
+    let lines' = map (\l -> read ('[' : foldr update  "]" l)) lines :: [[Int]]
+                    where update c = (:) (if c == '-' then '0' else c)
+
+    let len = length lines
+    return $ makeGraphFromArray $ listArray ((1, 1), (len, len)) $ concat lines'
 
 main = do
-  putStrLn "Sample"
-  euler edgesSample
+  putStrLn "Sample\n------"
+  euler graphSample
 
-  putStrLn "Actual"
+  putStrLn "Actual\n------"
   graph <- readGraph
   euler graph
