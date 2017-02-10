@@ -45,10 +45,10 @@ that the network remains connected.
 
 --------------------------------------------------------------------------------
 
-The principle is to look for cycles by walking the graph depth-first. Everytime
-a cycle is found, the edge with the greatest weight is removed. 
-
-Note: this algorithm is more complex and less efficient than the Prim's algorithm, which will be implemented next (in 0107b.hs).
+This is the algorithm I designed before discovering Prim's one. It is both more
+complex and less efficient than Prim's. The principle is to look for cycles by
+walking the graph depth-first. Everytime a cycle is found, the edge with the
+greatest weight is removed.
 
 -------------------------------------------------------------------------------}
 
