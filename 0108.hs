@@ -15,26 +15,43 @@ one-thousand?
 
 --------------------------------------------------------------------------------
 
-Without any loss of generality, we limit ourselve to the case 1/x <= 1/y < 1/n,
-i.e. x >= y > n.
+To avoid similair solutions, we imposes x <= y, and thus 1/x >= 1/y .
 
-In addition, if (x, y, n) is a solution, so is (ax, ay, an) for any a integer. 
+Lemme 1:  n+1 <= x <= 2n <= y <= n(n+1)
 
-Let us decompose x in a y + b, with 1 <= a and 0 <= b < y. 
+            1/x + 1/y = 1/n  ==>  1/x <= 1/n  ==>  x > n  ==> n+1 <= x 
+            1/x + 1/y = 1/n, y<=x  ==>  2/x >= 1/n  ==>  x <= 2n
+            1/x + 1/y = 1/n, y<=x  ==>  2/y <= 1/n  ==>  y >= 2n
+            1/x + 1/y = 1/n, n+1<=x ==> 1/(n+1) + 1/y >= 1/n  ==>  y <= n(n+1)
 
-It comes:
+By posing x = n + d, with 1 <= d <= n, it comes 
+    
+            y = n + n²/d
 
-        1/x + 1/y = (y + a y + b)/[y (a y + b)] = 1/n
-or,     
-        n = y (a y + b) / (y + a y + b)
+For y to be integral, d must be a divisor of n². 
 
-               /         y      \
-          = y | 1 - -----------  |
-               \    y (1+a) + b / 
-
-n and y being integer, y²/(y (1+a) + b) must also be integer.
-
-
-
+So, the principle of the algorithm is to count the divisor of n² smaller or
+equal to n.
 
 -------------------------------------------------------------------------------}
+
+import Data.List
+import Math.NumberTheory.Primes.Factorisation
+
+nbrSolutions n = length $ foldl' update [1] (primeFactors n)
+  where
+    primeFactors :: Integer -> [(Integer, Int)]
+    primeFactors n = factorise' (n*n)
+    
+    genFactors :: (Integer, Int) -> [Integer]
+    genFactors (p, e) = [r | i <- [0..e], let r = p^i, r <= n]
+    
+    combine :: [Integer] -> [Integer] -> [Integer]
+    combine as bs = [a*b | a <- as, b <- bs, let ab = a*b, ab <= n]
+
+    update :: [Integer] -> (Integer, Int) -> [Integer]
+    update acc pe = combine acc (genFactors pe)
+
+euler_108 bound = filter (\e -> bound < nbrSolutions e) [bound..]
+
+main =print $ head $ euler_108 1000
