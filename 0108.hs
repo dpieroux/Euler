@@ -33,25 +33,32 @@ For y to be integral, d must be a divisor of n².
 So, the principle of the algorithm is to count the divisor of n² smaller or
 equal to n.
 
+--------------------------------------------------------------------------------
+
+See 0110b.hs for a much better approach.
+
 -------------------------------------------------------------------------------}
 
 import Data.List
 import Math.NumberTheory.Primes.Factorisation
 
-nbrSolutions n = length $ foldl' update [1] (primeFactors n)
+nbrSolutions :: Int -> Int
+nbrSolutions n = length $ foldl' update [1] (primeFactors n')
   where
+    n' = fromIntegral n :: Integer
     primeFactors :: Integer -> [(Integer, Int)]
     primeFactors n = factorise' (n*n)
     
     genFactors :: (Integer, Int) -> [Integer]
-    genFactors (p, e) = [r | i <- [0..e], let r = p^i, r <= n]
+    genFactors (p, e) = [r | i <- [0..e], let r = p^i, r <= n']
     
     combine :: [Integer] -> [Integer] -> [Integer]
-    combine as bs = [a*b | a <- as, b <- bs, let ab = a*b, ab <= n]
+    combine as bs = [a*b | a <- as, b <- bs, let ab = a*b, ab <= n']
 
     update :: [Integer] -> (Integer, Int) -> [Integer]
     update acc pe = combine acc (genFactors pe)
 
-euler_108 bound = filter (\e -> bound < nbrSolutions e) [bound..]
+euler_108 :: Int -> Int
+euler_108 bound = head $ filter (\e -> bound < nbrSolutions e) [bound..]
 
-main =print $ head $ euler_108 1000
+main = print $ euler_108 1000
