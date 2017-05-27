@@ -49,7 +49,8 @@ restraining ourselves to non-increasing sequences of exponents:
 
 --------------------------------------------------------------------------------
 
-Note: the approach here allows to find the solution quickly, but not to check that there isn't a better one... See 0110b.hs for that.
+Note: the approach here allows to find the solution quickly, but not to check
+that there isn't a better one... See 0110b.hs for that.
 
 -------------------------------------------------------------------------------}
 

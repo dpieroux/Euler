@@ -6,24 +6,24 @@ polynomial (needed to correct src\Data\VectorSpace\WrappedNum.hs, see in misc/)
 
 
 
+Diophantine equations
+    x²-ny² = 1 (Pell's Equation) => 100
+    1/x + 1/y = 1/n => 108, 110
 
-Logarithm
-    99
+Graphs
+    Minimal weight connected graph (Prim's algorithm) => 107
 
-Pell's Equation 
-    100
+Logarithm => 99
 
-Polynomial interpolation
-    101
+Decompte to zero => 109
 
-Interior of a curve
-    102
+Polynomial interpolation => 101
 
-Fibonacci
-    104
+Interior of a curve => 102
 
-Pandigital
-    104
+Fibonacci => 104
 
-Special Sum Set
-    103, 105, 106
+Pandigital => 104
+
+Special Sum Set => 103, 105, 106
+
