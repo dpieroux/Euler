@@ -27,3 +27,4 @@ Pandigital => 104
 
 Special Sum Set => 103, 105, 106
 
+Bouncy number => 112, 113

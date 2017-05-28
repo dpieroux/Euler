@@ -48,9 +48,6 @@ isBouncy n = iterConstant lsd rest
   where
     (rest, lsd) = divMod n 10
 
-    iter :: NumberKind -> Int -> Int -> NumberKind   
-    iter status _ 0 = status
-    
     iterConstant lsd n
         | n == 0      = False
         | lsd == lsd' = iterConstant   lsd' rest'
