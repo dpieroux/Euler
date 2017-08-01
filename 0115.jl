@@ -1,7 +1,8 @@
 using Memoize
+using Base.Test
 
 @doc """
-    ncases_swb(minblocklen::Integer, rowlen::Integer)
+ncases_swb(minblocklen::Integer, rowlen::Integer)
 
 Compute the number of cases starting with a block.
 
@@ -47,5 +48,5 @@ while ncases(50, rowlen) < 1_000_000
     rowlen += 1
 end
 
-@printf("Euler 0115: F(50, %d) = %d", rowlen-1, ncases(50, rowlen-1))
-@printf("Euler 0115: F(50, %d) = %d", rowlen  , ncases(50, rowlen  ))
+@printf("Euler 0115: F(50, %d) = %d\n", rowlen-1, ncases(50, rowlen-1))
+@printf("Euler 0115: F(50, %d) = %d\n", rowlen  , ncases(50, rowlen  ))
