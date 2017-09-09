@@ -1,6 +1,6 @@
-Packages needed: 
+Packages needed:
 ---------------
-arithmoi 
+arithmoi
 pell
 polynomial (needed to correct src\Data\VectorSpace\WrappedNum.hs, see in misc/)
 
@@ -28,3 +28,5 @@ Pandigital => 104
 Special Sum Set => 103, 105, 106
 
 Bouncy number => 112, 113
+
+Recursice + Memoize => 114
