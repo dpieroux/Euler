@@ -24,15 +24,12 @@ This max_n(r(a, n)) = 0 for a = 1
 
 ===============================================================================#
 
-function rmax (a, n)
-    # It is assumed that a>=3
-    isodd(a) ? a*(a-1) : a*(a-2)
-end
+rmax(a) = isodd(a) ? a*(a-1) : a*(a-2) # It is assumed that a>=3
 
 function compute(limit)
     result = 0
     for a in 3:limit
-        result += rmax(a,n)
+        result += rmax(a)
     end
     result;
 end
