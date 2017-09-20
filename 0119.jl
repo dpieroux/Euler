@@ -14,7 +14,7 @@ Find a30.
 --------------------------------------------------------------------------------
 
 The solution is to build iteratively a table whose row and column indices
-correspond respectively to the exoponents and digit sums. The table is
+correspond respectively to the exponents and digit sums. The table is
 semi-infinite in each direction (i.e. indices starts at 1 but are unlimited
 otherwise).
 
