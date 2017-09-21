@@ -55,6 +55,9 @@ using Base.Test
 
 function compute_nbr_steps(limit)
     nbr_steps = Array{Int}(limit)
+    # nbr_steps[i] is the number of addition needed to compute i (i.e. it is
+    # m(i)).
+
     fill!(nbr_steps, -1)
     sets = Dict{Set{Int}, Set{Int}}()
     # Key is all numbers in the set, Value is the set of the numbers added
