@@ -1,3 +1,5 @@
+__precompile__()
+
 module Primes
 
 import Base
@@ -108,6 +110,10 @@ function test(limit)
             return p
         end
     end
+end
+
+function iter(T)
+    Iter{T}()
 end
 
 end # Module
