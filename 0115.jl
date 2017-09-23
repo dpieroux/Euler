@@ -48,10 +48,5 @@ while ncases(50, rowlen) < 1_000_000
     rowlen += 1
 end
 
-<<<<<<< HEAD
-@printf("Euler 0115: F(50, %d) = %d", rowlen-1, ncases(50, rowlen-1))
-@printf("Euler 0115: F(50, %d) = %d", rowlen  , ncases(50, rowlen  ))
-=======
 @printf("Euler 0115: F(50, %d) = %d\n", rowlen-1, ncases(50, rowlen-1))
 @printf("Euler 0115: F(50, %d) = %d\n", rowlen  , ncases(50, rowlen  ))
->>>>>>> f3a61389a2ad1f819e5b26e003c47256e493817e
