@@ -1,0 +1,68 @@
+ABC-hit             127
+Abundant numbers    23
+Amicable numbers    21, 95
+Anagram             98
+Arrangements        90
+Blocks 1d           114, 115, 116, 117
+Blocks 2d           85
+Bouncy numbers      112, 113
+Counting (how many) 15, 91
+Chains              26, 92, 95
+Champernowne        40
+Collatz number      14
+Combination         53
+Continued fractions 57, 64, 65
+Darts               109
+Dates               19
+Decomposing area    85
+Decomposing numbers 31, 76, 77, 78, 109,
+Digit               119
+Diophantine eq      66
+Diophantine inverse 108, 110
+Divisor             12
+Dynamic prog.       81, 82, 83
+Encryption          59, 79
+Euler's Totient     69, 70
+Expansion (digital) 80
+Factorial           34, 74
+Fibonacci           2, 25, 104
+Fractions           33, 71, 72, 73,
+Geometry 2D         85, 94, 102
+Geometry 3D         86, 126
+Goldbach            46
+Googol              56
+Graph               107,
+Hand calculation    13, 16, 20, 97, 104
+Logarithm           99
+Lynchrel            55
+Magic ring          68
+Mersenne Prime      97
+Monopoly            84
+Multiple            1, 5
+Numbers in letters  17
+Optimization        18, 67, 93, 122
+Optimum polynomial  101
+Palindrome          4, 36, 55, 125
+Pandigital          32, 38, 41, 43, 104, 118
+Perfect number      23
+Permutation         24, 49, 52, 62
+Poker               54
+Polygonal numbers   12, 42, 44, 45, 61
+Power               56, 63, 87, 119, 120, 123
+Power ^2            135, 136
+Power ^3            131
+Probability         100, 121
+Prime               7, 10, 27, 35, 37, 41, 46, 49, 50, 51, 58, 60, 77, 87, 111
+                    118, 123, 124, 131, 134
+Prime factor        3, 47
+Product             8, 11
+Product-sum numbers 88
+Pythagorean triplet 9, 39, 75
+Radical             124, 127
+Repunit             129, 130, 132, 133
+Roman numerals      89
+Sudoku              96
+Special subset sums 103, 105, 106
+Spiral              28, 58, 128
+Sum of power        6, 30
+Unclassifiable      22, 29
