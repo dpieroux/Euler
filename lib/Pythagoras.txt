@@ -1,0 +1,131 @@
+Table of Content
+     I. Generating the primitive Pythagorean triples
+    II. Generating all Pythagorean triples
+
+
+I. Generating the primitive Pythagorean triples
+===============================================
+
+All the primitive Pythagorean triples (a, b c) can be obtained from the set of
+pairs (m, n) with 0 < n < m, m and n coprime and of opposite parity. Given such
+a pair, it comes (a, b, c) = (min, max, m²+n²) with min (resp. max) the minimum
+(resp. maximum) between m²-n² and 2mn. This relation establishes a bijection
+between the set of valid pairs and the set of primitive Pythagorean triples (a,
+b c) with a < b < c.
+
+In what follows, let's called the value c obtained from a pair its hypotenuse,
+and the value a its small side.
+
+Generating a sequence of all primitive triples is thus equivalent to generating
+a sequence of all the valid pairs (m, n). This can be achieved very easily, for
+instance be considering all m>1 and then, for each m, all n valid. However, the
+triples so obtained are not obtained in a natural order. So we add the
+additional constraint that the triples must be generated first by increasing
+hypotenuses, and second by increasing small sides.
+
+To do so, let's arrange the valid pairs (m, n) in a table, with increasing m
+rightwards and increasing n downwards:
+
+n\m    2        3        4        5        6        7        8
+ 1   (2,1)      x      (4,1)      x      (6,1)      x      (8,1)     .
+ 2            (3,2)      x      (5,2)      x      (7,2)      x       .
+ 3                     (4,3)      x        x        x      (8,3)     .
+ 4                              (5,4)      x      (7,4)      x       .
+ 5                                       (6,5)      x      (8,5)     .
+ 6                                                (7,6)      x       .
+ 7                                                         (8,7)     .
+
+We consider now that each pair of the table acts as a generator of up to 2 other
+pairs as follows:
+     - any pair generates the pair just below it, if it exists.
+     - any first pair of a column generate the first pair of the column to its
+       right.
+
+This is illustrated in the diagram below:
+
+n\m    2       3        4        5        6        7        8
+1   (2,1)-|        |->(4,1)-|        |->(6,1)-|        |->(8,1)     .
+2         |->(3,2)-|    v   |->(5,2)-|    |   |->(7,2)-|    v       .
+3                     (4,3)      v        |        v      (8,3)     .
+4                              (5,4)      v      (7,4)      v       .
+5                                       (6,5)      v      (8,5)     .
+6                                                (7,6)      v       .
+7                                                         (8,7)     .
+
+It is trivial to show that
+    * Any pair has a smaller hypotenuse than the pairs below it in the table.
+    * The first pair of a column has a smaller hypotenuse than the first pairs
+      of the columns to its right.
+
+Therefore the hypotenuse of a generated element is always greater than the one
+of its generator.
+
+Let us now consider the following algorithm:
+     1. Initialise a list L with the first pair (2,1).
+     2. Then iterate forever:
+         2.1. Get and remove the head h of L.
+         2.2. Yield the corresponding triple to the user.
+         2.3. Insert in L the elements generated from h so that the pairs of
+              L are kept sorted by increasing hypotenuses first and small
+              sides second.
+
+Theorem: The elements so yielded are sorted by increasing hypotenuses first
+         and small sides second.
+
+    For the demonstration, let h be the head of L at a given time. Because L
+    is kept sorted, by construction all elements of L other then h have at
+    least an hypotenuse as large as h, and in case of equal hypotenuse, a
+    small side larger than h.
+
+    Could it be possible that a pair is inserted later in L with either a
+    smaller hypotenuse than h, or with an equal hypotenuse but a smaller small
+    side?
+
+    The answer is no. To insert such an item, the hypotenuse of the generator
+    pair should be smaller than h's one. However, there is no such element in L
+    at the time h is the head, since h has the smallest hypotenuse of the
+    element of h. So, all elements that will be inserted later will have a
+    hypotenuse larger than h's one.
+
+    Otherwise said, the first time a pair with a given hypotenuse becomes the
+    head of L, all the pairs with a smaller hypotenuse have already been
+    returned to the user, and all the pairs with a equal hypotenuse are
+    already in L. As the latter are order by small side first, the elements
+    will be yielded in the required order.                               CQFD
+
+
+II. Generating all Pythagorean triples
+======================================
+
+Any Pytagorean triple is the product of one (and only one) primitive triple with
+one integer. For instance, (10, 24, 26) is twice the primitive (5, 12, 13).
+
+To generate all triples with increasing hypotenuse first and increasing small
+side second, we proceed similarly to the approach above by laying on a table
+with the ordered primitives on the first row and multiple of the first row
+elements in the columns:
+
+            k    P1      P2      P3      P4      P5     ...
+            1   1 P1    1 P2    1 P3    1 P4    1 P5    ...
+            2   2 P1    2 P2    2 P3    2 P4    2 P5    ...
+            3   3 P1    3 P2    3 P3    3 P4    3 P5    ...
+            4   4 P1    4 P2    4 P3    4 P4    4 P5    ...
+            .   ...     ...     ...     ...     ...     ...
+
+Here, each element is used as generator for the next element of the column.
+Column first elements are also used to generate the first element of the next
+column:
+
+            k    P1      P2      P3      P4      P5     ...
+
+            1   1 P1 -> 1 P2 -> 1 P3 -> 1 P4 -> 1 P5 -> ...
+                  v       v       v       v       v
+            2   2 P1    2 P2    2 P3    2 P4    2 P5    ...
+                  v       v       v       v       v
+            3   3 P1    3 P2    3 P3    3 P4    3 P5    ...
+                  v       v       v       v       v
+            4   4 P1    4 P2    4 P3    4 P4    4 P5    ...
+            .   ...     ...     ...     ...     ...     ...
+
+The same algorithm as above, with L initialised to 1*P1, returns all the triples
+in the required order.
