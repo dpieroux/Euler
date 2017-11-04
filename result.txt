@@ -34,14 +34,21 @@ result.txt
 17-10-23    134     134     60, 1638    219, 6564   5113    0.688%
 17-10-29    135     135     56, 1638    215, 6570   5026    0.675%
 17-10-29    136     136     56, 1638    212, 6570   4938    0.663%
-
+17-11-04    137     137     54, 1639    208, 6570   4849    0.649%
 
  1  Nivsir          575+
- 4  frederik.soete  389
+ 4  frederik.soete  390 *
  6  Toonijn         332
 12  Serge           234
 36  Pieter_56       159 *
 39  Roy Scheerens   152
 42  LittleFox       148
 46  michaelmay      145
-76  robby           120 *
+63  Borninabin      130
+69  Akulen          126
+73  Woumpousse      151
+76  robby           122 *
+88  Jeroen          110
+89  jdewasseige     110
+
+100 chdelfosse
