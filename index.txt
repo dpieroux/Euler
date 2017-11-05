@@ -25,6 +25,7 @@ Euler's Totient     69, 70
 Expansion (digital) 80
 Factorial           34, 74
 Fibonacci           2, 25, 104
+Fib. golden nudgets 137
 Fractions           33, 71, 72, 73,
 Geometry 2D         85, 94, 102
 Geometry 3D         86, 126
@@ -57,7 +58,7 @@ Prime               7, 10, 27, 35, 37, 41, 46, 49, 50, 51, 58, 60, 77, 87, 111
 Prime factor        3, 47
 Product             8, 11
 Product-sum numbers 88
-Pythagorean triplet 9, 39, 75,
+Pythagorean triplet 9, 39, 75, 139
 Radical             124, 127
 Repunit             129, 130, 132, 133
 Roman numerals      89
