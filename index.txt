@@ -43,7 +43,7 @@ Optimization        18, 67, 93, 122
 Optimum polynomial  101
 Palindrome          4, 36, 55, 125
 Pandigital          32, 38, 41, 43, 104, 118
-Pell's equation     66, 137
+Pell's equation     66, 137, 138
 Perfect number      23
 Permutation         24, 49, 52, 62
 Poker               54
@@ -57,7 +57,7 @@ Prime               7, 10, 27, 35, 37, 41, 46, 49, 50, 51, 58, 60, 77, 87, 111
 Prime factor        3, 47
 Product             8, 11
 Product-sum numbers 88
-Pythagorean triplet 9, 39, 75, 137, 138
+Pythagorean triplet 9, 39, 75,
 Radical             124, 127
 Repunit             129, 130, 132, 133
 Roman numerals      89

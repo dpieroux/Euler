@@ -54,9 +54,13 @@ a+2.
 genPrimTriples returns the PPT with increasing c. However, we have also to mix
 the double of some PPTs.
 
+--------------------------------------------------------------------------------
+
+This approach is correct but much too slow.
 
 -------------------------------------------------------------------------------}
 
+import Tools
 import Tools.Pythagoras (genPrimTriples)
 
 type T3 = (Int, Int, Int)
@@ -88,12 +92,5 @@ mix ps@(p@(_, _, c):ps') qs
   where
     q = head qs
 
-printUpto :: Int -> Int -> [Int] -> IO()
-printUpto i bound (n:ns)
-    | i > bound = return ()
-    | otherwise = do
-        putStrLn ((show i) ++ ": " ++ (show n))
-        printUpto (i+1) bound ns
-
 main = do
-    printUpto 1 15 $ iter (genPrimTriples ()) []
+    printEach $ take 15 $ iter (genPrimTriples ()) []
