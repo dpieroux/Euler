@@ -20,13 +20,15 @@ below.
             (√89−5)/8   4
             (√34−3)/5   5
 
-We shall call AF(x) a golden nugget if x is rational, because they become increasingly rarer; for example, the 10th golden nugget is 74049690.
+We shall call AF(x) a golden nugget if x is rational, because they become
+increasingly rarer; for example, the 10th golden nugget is 74049690.
 
 Find the 15th golden nugget.
 
 --------------------------------------------------------------------------------
 
-AF(x) is the generating function of the Fibonacci sequence. Using the Fibonacci recurrence relation it is trivial to show that AF(x) = x/(1-x-x²).
+AF(x) is the generating function of the Fibonacci sequence. Using the Fibonacci
+recurrence relation it is trivial to show that AF(x) = x/(1-x-x²).
 
 Posing AF(x) = n and solving for x, it comes
     x = [√(5n²+2n+1) - (n+1)]/2n

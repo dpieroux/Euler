@@ -48,11 +48,12 @@ This is a generalised Pell's equation in (5n+1) and l
 import qualified Math.NumberTheory.Pell as Pell
 import           Tools
 
-euler = map (\fnmo -> quot (fnmo - 1) 5) -- fnpo = five n plus one
+euler = tail -- the first solution is n=0, which is invalid
+      $ map (\fnpo -> quot (fnpo - 1) 5) -- fnpo = five n plus one
       $ filter (\fnpo -> mod fnpo 5 == 1)
       $ map fst $ Pell.solve 5 (-4)
 
-line n = concat [show n, "th golden nugget: ", show (euler !! n)]
+line n = concat [show n, "th golden nugget: ", show $ euler !! (n-1)]
 
 --The first solution return by 'euler' is n=0, which is not acceptable. So, the
 -- n'th solutions is not 'euler !! (n-1)'' but 'euler !! n'
