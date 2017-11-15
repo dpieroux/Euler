@@ -25,7 +25,7 @@ Euler's Totient     69, 70
 Expansion (digital) 80
 Factorial           34, 74
 Fibonacci           2, 25, 104
-Fib. golden nudgets 137
+Fib. golden nudgets 137, 140
 Fractions           33, 71, 72, 73,
 Geometry 2D         85, 94, 102
 Geometry 3D         86, 126
@@ -53,6 +53,7 @@ Power               56, 63, 87, 119, 120, 123
 Power ^2            135, 136
 Power ^3            131
 Probability         100, 121
+progressive numbers 141
 Prime               7, 10, 27, 35, 37, 41, 46, 49, 50, 51, 58, 60, 77, 87, 111
                     118, 123, 124, 131, 134
 Prime factor        3, 47
