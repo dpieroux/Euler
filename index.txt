@@ -50,7 +50,7 @@ Permutation         24, 49, 52, 62
 Poker               54
 Polygonal numbers   12, 42, 44, 45, 61
 Power               56, 63, 87, 119, 120, 123
-Power ^2            135, 136
+Power ^2            135, 136, 143
 Power ^3            131
 Probability         100, 121
 progressive numbers 141
@@ -67,4 +67,5 @@ Sudoku              96
 Special subset sums 103, 105, 106
 Spiral              28, 58, 128
 Sum of power        6, 30
+Triangle            143
 Unclassifiable      22, 29
