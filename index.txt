@@ -55,7 +55,7 @@ Power ^3            131
 Probability         100, 121
 Progressive numbers 141
 Prime               7, 10, 27, 35, 37, 41, 46, 49, 50, 51, 58, 60, 77, 87, 111
-                    118, 123, 124, 131, 134
+                    118, 123, 124, 131, 134, 146
 Prime factor        3, 47
 Product             8, 11
 Product-sum numbers 88
