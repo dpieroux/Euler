@@ -16,6 +16,7 @@ Darts               109
 Dates               19
 Decomposing area    85
 Decomposing numbers 31, 76, 77, 78, 109,
+Differential Geom   144
 Digit               119
 Diophantine inverse 108, 110
 Divisor             12
@@ -37,7 +38,6 @@ Logarithm           99
 Lynchrel            55
 Magic ring          68
 Mersenne Prime      97
-Monopoly            84
 Multiple            1, 5
 Numbers in letters  17
 Optimization        18, 67, 93, 122
@@ -53,7 +53,7 @@ Power               56, 63, 87, 119, 120, 123
 Power ^2            135, 136, 143
 Power ^3            131
 Probability         100, 121
-progressive numbers 141
+Progressive numbers 141
 Prime               7, 10, 27, 35, 37, 41, 46, 49, 50, 51, 58, 60, 77, 87, 111
                     118, 123, 124, 131, 134
 Prime factor        3, 47
@@ -63,6 +63,7 @@ Pythagorean triplet 9, 39, 75, 139, 142
 Radical             124, 127
 Repunit             129, 130, 132, 133
 Roman numerals      89
+Simulation          84, 144
 Sudoku              96
 Special subset sums 103, 105, 106
 Spiral              28, 58, 128
