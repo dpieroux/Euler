@@ -6,7 +6,7 @@
 37  LittleFox       155
 39  Roy Scheerens   152
 46  michaelmay      145
-49  DPIEROUX        143 <--
+48  DPIEROUX        144 <--
 57  rolandct        136
 63  Borninabin      130
 69  Akulen          126
@@ -19,7 +19,8 @@
 100 chdelfosse      107
 
 
-            Tot     Belgium      Language  World
+            Tot     Belgium     Language      World
+17-11-25    144     48, 1644    176, 6581   4303 (0.571%)
 17-11-25    143     49, 1644    180, 6580   4380 (0.582%)
 17-11-18    142     51, 1642    185, 6579   4473 (0.595%)
 17-11-15    141     51, 1642    188, 6576   4540 (0.605%)

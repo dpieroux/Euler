@@ -6,7 +6,7 @@ Arrangements        90
 Blocks 1d           114, 115, 116, 117
 Blocks 2d           85
 Bouncy numbers      112, 113
-Counting (how many) 15, 91
+Counting (how many) 15, 91, 145
 Chains              26, 92, 95
 Champernowne        40
 Collatz number      14
