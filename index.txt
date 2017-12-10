@@ -20,7 +20,7 @@ Differential Geom   144
 Digit               119
 Diophantine inverse 108, 110
 Divisor             12
-Dynamic prog.       81, 82, 83
+Dynamic prog.       81, 82, 83, 147
 Encryption          59, 79
 Euler's Totient     69, 70
 Expansion (digital) 80
