@@ -3,6 +3,7 @@ Abundant numbers    23
 Amicable numbers    21, 95
 Anagram             98
 Arrangements        90
+Binomial coeff      148
 Blocks 1d           114, 115, 116, 117
 Blocks 2d           85
 Bouncy numbers      112, 113

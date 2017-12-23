@@ -17,6 +17,7 @@ It is easy to see that
     is a multiple of 5.
   - finally, n cannot be a multiple of 3 because then n²+3 would be a multiple
     of 3; and similarly for 7 and 13.
+
 -------------------------------------------------------------------------------}
 
 import Math.NumberTheory.Primes.Testing(isPrime)

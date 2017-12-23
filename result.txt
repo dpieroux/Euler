@@ -1,26 +1,27 @@
  1  Nivsir         +575
- 4  frederik.soete  391
- 5  Raphus          370
+ 3  mverschaeve     437
+ 4  frederik.soete  393
+ 5  Raphus          371
  6  Toonijn         333
 12  Serge           240
-35  Pieter_56       159
-37  LittleFox       178
-39  Roy Scheerens   152
-46  michaelmay      145
-47  dpieroux        145 <--
+25  LittleFox       179
+36  Pieter_56       159
+40  Roy Scheerens   152
+43  dpieroux        145 <--
+47  michaelmay      145
 57  rolandct        136
 63  Borninabin      130
-69  Akulen          126
-73  Woumpousse      151
 74  robby           122
-88  Jeroen          110
-89  jdewasseige     110
+80  nvthuyne        116
+89  Jeroen          110
+90  jdewasseige     110
 96  Leathal         109
 
-100 chdelfosse      107
+100 jannes          107
 
 
             Tot     Belgium     Language      World
+17-12-23    148     43, 1656    166, 6599   4084 (0.536%)
 17-12-10    147     44, 1652    166, 6637   4137 (0.546%)
 17-11-26    146     46, 1644    170, 6581   4188 (0.556%)
 17-11-26    145     47, 1644    171, 6581   4244 (0.564%)
