@@ -64,6 +64,7 @@ Pythagorean triplet 9, 39, 75, 139, 142
 Radical             124, 127
 Repunit             129, 130, 132, 133
 Roman numerals      89
+Max segment sum     149
 Simulation          84, 144
 Sudoku              96
 Special subset sums 103, 105, 106
