@@ -41,7 +41,7 @@ Magic ring          68
 Mersenne Prime      97
 Multiple            1, 5
 Numbers in letters  17
-Optimization        18, 67, 93, 122
+Optimization        18, 67, 93, 122, 150
 Optimum polynomial  101
 Palindrome          4, 36, 55, 125
 Pandigital          32, 38, 41, 43, 104, 118
