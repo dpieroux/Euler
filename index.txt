@@ -53,7 +53,7 @@ Polygonal numbers   12, 42, 44, 45, 61
 Power               56, 63, 87, 119, 120, 123
 Power ^2            135, 136, 143
 Power ^3            131
-Probability         100, 121
+Probability         100, 121, 151
 Progressive numbers 141
 Prime               7, 10, 27, 35, 37, 41, 46, 49, 50, 51, 58, 60, 77, 87, 111
                     118, 123, 124, 131, 134, 146
@@ -65,7 +65,7 @@ Radical             124, 127
 Repunit             129, 130, 132, 133
 Roman numerals      89
 Max segment sum     149
-Simulation          84, 144
+Simulation          84, 144, 151
 Sudoku              96
 Special subset sums 103, 105, 106
 Spiral              28, 58, 128
